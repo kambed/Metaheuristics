@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Pair {
-    public Backpack backpack1;
-    public Backpack backpack2;
+    private final Backpack backpack1;
+    private final Backpack backpack2;
 
-    int numOfItems;
+    private final int numOfItems;
 
     public Pair(Backpack backpack1, Backpack backpack2) {
         this.backpack1 = backpack1;

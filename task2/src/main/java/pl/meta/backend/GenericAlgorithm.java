@@ -54,10 +54,12 @@ public class GenericAlgorithm {
     }
 
     public Pair selectPairRoulette(List<Backpack> population) {
+        // TODO: SELECTION ROULETTE
         return null;
     }
 
     public Pair selectPairTournament(List<Backpack> population) {
+        // TODO: SELECTION TOURNAMENT
         return null;
     }
 }

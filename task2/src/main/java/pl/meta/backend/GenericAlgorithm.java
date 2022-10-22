@@ -2,9 +2,7 @@ package pl.meta.backend;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class GenericAlgorithm {
     private final List<Item> items;
@@ -32,7 +30,7 @@ public class GenericAlgorithm {
     }
 
     public List<Backpack> newPopulation(List<Backpack> population) {
-        List<Pair> pairsToCross = new ArrayList<>();
+        List<Backpack> nextPopulation = new ArrayList<>();
 
         Function<List<Backpack>, Pair> selectPairFunction = this::selectPairRoulette;
         if (selectionMethod == SelectionMethod.TOURNAMENT) {
@@ -40,11 +38,7 @@ public class GenericAlgorithm {
         }
 
         for (int i = 0; i < populationSize / 2; i++) {
-            pairsToCross.add(selectPairFunction.apply(population));
-        }
-
-        List<Backpack> nextPopulation = new ArrayList<>();
-        for (Pair pair : pairsToCross) {
+            Pair pair = selectPairFunction.apply(population);
             nextPopulation.addAll(pair.cross(crossMethod));
         }
         return nextPopulation;

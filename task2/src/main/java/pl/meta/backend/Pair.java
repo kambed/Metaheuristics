@@ -2,6 +2,7 @@ package pl.meta.backend;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class Pair {
     public Backpack backpack1;
@@ -20,6 +21,14 @@ public class Pair {
         children.add(new Backpack(backpack1.getMaxWeight(), backpack1.getPossibleItems()));
         children.add(new Backpack(backpack2.getMaxWeight(), backpack2.getPossibleItems()));
         return children;
+    }
+
+    List<Backpack> cross(CrossMethod crossMethod) {
+        Supplier<List<Backpack>> crossFunction = this::crossSinglePoint;
+        if (crossMethod == CrossMethod.DOUBLE_POINT) {
+            crossFunction = this::crossDoublePoint;
+        }
+        return crossFunction.get();
     }
 
     public List<Backpack> crossSinglePoint() {

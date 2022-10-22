@@ -2,18 +2,20 @@ package pl.meta.backend;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class GenericAlgorithm {
     private final List<Item> items;
     private final int backpackMaxWeight;
     private final int populationSize;
 
-    private final int selectionMethod;
+    private final SelectionMethod selectionMethod;
+    private final CrossMethod crossMethod;
 
-    private final int crossMethod;
-
-    public GenericAlgorithm(List<Item> items, int backpackMaxWeight, int populationSize, int selectionMethod,
-                            int crossMethod) {
+    public GenericAlgorithm(List<Item> items, int backpackMaxWeight, int populationSize, SelectionMethod selectionMethod,
+                            CrossMethod crossMethod) {
         this.items = items;
         this.backpackMaxWeight = backpackMaxWeight;
         this.populationSize = populationSize;
@@ -31,24 +33,19 @@ public class GenericAlgorithm {
 
     public List<Backpack> newPopulation(List<Backpack> population) {
         List<Pair> pairsToCross = new ArrayList<>();
-        if (selectionMethod == 0) {
-            for (int i = 0; i < populationSize / 2; i++) {
-                pairsToCross.add(selectPairRoulette(population));
-            }
-        } else if (selectionMethod == 1) {
-            for (int i = 0; i < populationSize / 2; i++) {
-                pairsToCross.add(selectPairTournament(population));
-            }
+
+        Function<List<Backpack>, Pair> selectPairFunction = this::selectPairRoulette;
+        if (selectionMethod == SelectionMethod.TOURNAMENT) {
+            selectPairFunction = this::selectPairTournament;
         }
+
+        for (int i = 0; i < populationSize / 2; i++) {
+            pairsToCross.add(selectPairFunction.apply(population));
+        }
+
         List<Backpack> nextPopulation = new ArrayList<>();
-        if (crossMethod == 0) {
-            for (Pair pair : pairsToCross) {
-                nextPopulation.addAll(pair.crossSinglePoint());
-            }
-        } else if (crossMethod == 1) {
-            for (Pair pair : pairsToCross) {
-                nextPopulation.addAll(pair.crossDoublePoint());
-            }
+        for (Pair pair : pairsToCross) {
+            nextPopulation.addAll(pair.cross(crossMethod));
         }
         return nextPopulation;
     }

@@ -3,105 +3,44 @@ package pl.meta.frontend;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import org.jfree.chart.ChartUtilities;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import pl.meta.backend.Item;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainFormController {
     public static final String MAIN_FORM_RESOURCE = "MainForm.fxml";
-    public static final String MAIN_FORM_TITLE = "Neural Network";
+    public static final String MAIN_FORM_TITLE = "Generic Algorithm";
 
-    private double[][] learnInputs;
-    private double[][] learnOutputs;
-    private double[][] testInputs;
+    private final List<Item> items = new ArrayList<>();
 
     @FXML
-    TextField numOfInputs;
+    TextField backpack_weight;
     @FXML
-    TextField numOfOutputs;
+    TextField crossMutationRate;
     @FXML
-    TextField numOfHiddenLayers;
+    TextField populationSize;
     @FXML
-    TextField numOfNeuronsInHiddenLayers;
+    TextField numOfIterations;
     @FXML
-    CheckBox withBias;
+    TextField itemsDataFilePath;
     @FXML
-    TextField learningRate;
+    RadioButton rouletteRadioButton;
     @FXML
-    TextField momentumRate;
+    RadioButton tournamentRadioButton;
     @FXML
-    TextField numOfEras;
+    RadioButton singlePointRadioButton;
     @FXML
-    TextField learningDataFilePath;
-    @FXML
-    TextField learningOutputFilePath;
-    @FXML
-    TextField dataFilePath;
-    @FXML
-    TextArea consoleArea;
-    @FXML
-    RadioButton learnRadioButton;
-    @FXML
-    RadioButton workRadioButton;
-    @FXML
-    Button calculateButton;
-    @FXML
-    Button learnButton;
-    @FXML
-    Button loadTestDataButton;
-    @FXML
-    Button loadLearningOutputDataButton;
-    @FXML
-    Button loadLearningDataButton;
-    @FXML
-    Button saveButton;
-    @FXML
-    Button loadButton;
+    RadioButton doublePointRadioButton;
     @FXML
     ImageView chart;
     @FXML
-    CheckBox generateStats;
-
-    public void startCalculating(ActionEvent actionEvent) {
-
-    }
-
-    public void changeStats(ActionEvent actionEvent) {
-        loadLearningOutputDataButton.setDisable(!generateStats.isSelected());
-    }
-
-    public void startLearning(ActionEvent actionEvent) throws FileNotFoundException {
-
-    }
-
-    public void loadLearningData(ActionEvent actionEvent) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
-
-    }
-
-    public void loadLearningOutput(ActionEvent actionEvent) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
-
-    }
-
-    public void loadTestData(ActionEvent actionEvent) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
-
-    }
-
-    public void loadNeuralNetwork(ActionEvent actionEvent) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
-
-    }
-
-    public void saveNeuralNetwork(ActionEvent actionEvent) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
-
-    }
+    TextArea consoleArea;
 
     public void saveLogs(ActionEvent actionEvent) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
         String stringPath = FileChoose.saveChooser("Save logs to file ", actionEvent);
@@ -112,31 +51,20 @@ public class MainFormController {
         }
     }
 
-    public void changeMode(ActionEvent actionEvent) {
-        changeDisableMode(learnRadioButton.isSelected());
-        if (learnRadioButton.isSelected()) {
-            consoleArea.appendText("Learning mode selected \n");
-        } else {
-            consoleArea.appendText("Working mode selected \n");
+    public void loadItemsData(ActionEvent actionEvent) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
+        String stringPath = FileChoose.openChooser("Open items data file ", actionEvent);
+        if (!stringPath.isBlank()) {
+            consoleArea.appendText("Items data loaded: " + stringPath + "\n");
+            List<String> data = Files.readAllLines(Paths.get(stringPath));
+            for (String s : data) {
+                String[] itemParameters = s.split(";");
+                Item item = new Item(itemParameters[1], Integer.parseInt(itemParameters[2]), Integer.parseInt(itemParameters[3]));
+                items.add(item);
+                consoleArea.appendText(item.toString() + "\n");
+            }
         }
     }
 
-    public void changeDisableMode(boolean learningMode) {
-        calculateButton.setDisable(learningMode);
-        loadTestDataButton.setDisable(learningMode);
-        loadButton.setDisable(learningMode);
-        generateStats.setDisable(learningMode);
-
-        learnButton.setDisable(!learningMode);
-        numOfOutputs.setDisable(!learningMode);
-        numOfInputs.setDisable(!learningMode);
-        numOfHiddenLayers.setDisable(!learningMode);
-        numOfNeuronsInHiddenLayers.setDisable(!learningMode);
-        withBias.setDisable(!learningMode);
-        learningRate.setDisable(!learningMode);
-        momentumRate.setDisable(!learningMode);
-        numOfEras.setDisable(!learningMode);
-        loadLearningOutputDataButton.setDisable(!learningMode);
-        loadLearningDataButton.setDisable(!learningMode);
+    public void start(ActionEvent actionEvent) {
     }
 }

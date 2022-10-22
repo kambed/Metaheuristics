@@ -12,13 +12,13 @@ public class Pair {
     public Pair(Backpack backpack1, Backpack backpack2) {
         this.backpack1 = backpack1;
         this.backpack2 = backpack2;
-        numOfItems = backpack1.getPossible_items().size();
+        numOfItems = backpack1.getPossibleItems().size();
     }
 
     public List<Backpack> initChildren() {
         List<Backpack> children = new ArrayList<>();
-        children.add(new Backpack(backpack1.getMaxWeight(), backpack1.getPossible_items()));
-        children.add(new Backpack(backpack2.getMaxWeight(), backpack2.getPossible_items()));
+        children.add(new Backpack(backpack1.getMaxWeight(), backpack1.getPossibleItems()));
+        children.add(new Backpack(backpack2.getMaxWeight(), backpack2.getPossibleItems()));
         return children;
     }
 

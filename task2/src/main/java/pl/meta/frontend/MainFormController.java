@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import pl.meta.backend.Item;
+import pl.meta.backend.*;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -22,7 +22,9 @@ public class MainFormController {
     @FXML
     TextField backpack_weight;
     @FXML
-    TextField crossMutationRate;
+    TextField crossChance;
+    @FXML
+    TextField mutationChance;
     @FXML
     TextField populationSize;
     @FXML
@@ -60,11 +62,35 @@ public class MainFormController {
                 String[] itemParameters = s.split(";");
                 Item item = new Item(itemParameters[1], Integer.parseInt(itemParameters[2]), Integer.parseInt(itemParameters[3]));
                 items.add(item);
-                consoleArea.appendText(item.toString() + "\n");
+                consoleArea.appendText(item + "\n");
             }
+            itemsDataFilePath.setText(stringPath);
         }
     }
 
     public void start(ActionEvent actionEvent) {
+        SelectionMethod sm = SelectionMethod.TOURNAMENT;
+        if (rouletteRadioButton.isSelected()) {
+            sm = SelectionMethod.ROULETTE;
+        }
+        CrossMethod cm = CrossMethod.DOUBLE_POINT;
+        if (singlePointRadioButton.isSelected()) {
+            cm = CrossMethod.SINGLE_POINT;
+        }
+        GenericAlgorithm ga = new GenericAlgorithm(items, Integer.parseInt(backpack_weight.getText()),
+                Integer.parseInt(populationSize.getText()), sm, cm,
+                Double.parseDouble(crossChance.getText()), Double.parseDouble(mutationChance.getText()));
+        List<Backpack> finalPopulation = ga.start(Integer.parseInt(numOfIterations.getText()));
+        consoleArea.appendText("================================================ \n");
+        int i = 1;
+
+        finalPopulation.sort(new BackpackComparator());
+        for (Backpack bp : finalPopulation) {
+            consoleArea.appendText(i + ". weight=" + bp.getWeight() + ". value=" + bp.getValue() + "\n");
+            i++;
+        }
+        consoleArea.appendText("================================================ \n");
+        consoleArea.appendText("Best backpack in final population: " + finalPopulation.get(0) + "\n");
+        consoleArea.appendText("================================================ \n");
     }
 }

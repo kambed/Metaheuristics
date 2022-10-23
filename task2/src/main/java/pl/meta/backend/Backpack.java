@@ -1,5 +1,7 @@
 package pl.meta.backend;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class Backpack {
@@ -56,5 +58,15 @@ public class Backpack {
 
     public void setItemOccurrence(int index, boolean value) {
         itemsOccurrence[index] = value;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Backpack{");
+        sb.append(", itemsOccurrence=").append(Arrays.toString(itemsOccurrence));
+        sb.append(", weight=").append(getWeight());
+        sb.append(", value=").append(getValue());
+        sb.append('}');
+        return sb.toString();
     }
 }

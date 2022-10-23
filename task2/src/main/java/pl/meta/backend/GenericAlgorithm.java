@@ -1,6 +1,7 @@
 package pl.meta.backend;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -124,7 +125,42 @@ public class GenericAlgorithm {
         if (numOfChildren % 2 == 1) {
             numOfChildren++;
         }
-        // TODO: SELECTION TOURNAMENT
-        return null;
+        for (int i = 0; i < numOfChildren / 2; i++) {
+            List<List<Backpack>> groups = new ArrayList<>();
+            int numOfGroups = populationSize / 10;
+            if (numOfGroups % 2 == 1) {
+                numOfGroups++;
+            }
+            //init groups
+            for (int j = 0; j < numOfGroups; j++) {
+                groups.add(new ArrayList<>());
+            }
+
+            //push population elements to random groups
+            for (int j = 0; j < numOfGroups; j++) {
+                groups.get(j).add(population.get(j));
+            }
+            for (int j = numOfGroups; j < populationSize; j++) {
+                groups.get((int) Math.round(Math.random() * (numOfGroups - 1))).add(population.get(j));
+            }
+
+            //sort groups
+            for (List<Backpack> group : groups) {
+                group.sort(new BackpackComparator());
+            }
+
+            //choose parents
+            int parent1GroupIndex = (int) Math.round(Math.random() * (numOfGroups - 1));
+            Backpack parent1 = groups.get(parent1GroupIndex).get(0);
+
+            int parent2GroupIndex;
+            do {
+                parent2GroupIndex = (int) Math.round(Math.random() * (numOfGroups - 1));
+            } while (parent1GroupIndex == parent2GroupIndex);
+            Backpack parent2 = groups.get(parent2GroupIndex).get(0);
+
+            pairs.add(new Pair(parent1, parent2));
+        }
+        return pairs;
     }
 }

@@ -83,16 +83,14 @@ public class MainFormController {
         List<Backpack> finalPopulation = ga.start(Integer.parseInt(numOfIterations.getText()));
         consoleArea.appendText("================================================ \n");
         int i = 1;
-        Backpack bestValue = finalPopulation.get(0);
+
+        finalPopulation.sort(new BackpackComparator());
         for (Backpack bp : finalPopulation) {
             consoleArea.appendText(i + ". weight=" + bp.getWeight() + ". value=" + bp.getValue() + "\n");
-            if (bestValue.getValue() < bp.getValue()) {
-                bestValue = bp;
-            }
             i++;
         }
         consoleArea.appendText("================================================ \n");
-        consoleArea.appendText("Best backpack in final population: " + bestValue + "\n");
+        consoleArea.appendText("Best backpack in final population: " + finalPopulation.get(0) + "\n");
         consoleArea.appendText("================================================ \n");
     }
 }

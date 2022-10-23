@@ -10,100 +10,119 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="719.0" prefWidth="959.0" style="-fx-background-color: #000055;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.meta.frontend.MainFormController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="719.0"
+      prefWidth="959.0" style="-fx-background-color: #000055;" xmlns="http://javafx.com/javafx/19"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.meta.frontend.MainFormController">
     <children>
-        <TextField fx:id="crossChance" layoutX="794.0" layoutY="455.0" opacity="0.6" />
+        <TextField fx:id="crossChance" layoutX="794.0" layoutY="455.0" opacity="0.6"/>
         <Label layoutX="714.0" layoutY="456.0" prefHeight="25.0" prefWidth="91.0" text="Cross chance:" textFill="WHITE">
             <font>
-                <Font name="System Bold" size="12.0" />
+                <Font name="System Bold" size="12.0"/>
             </font>
         </Label>
-        <TextField fx:id="populationSize" layoutX="794.0" layoutY="495.0" opacity="0.6" />
-        <Label layoutX="700.0" layoutY="496.0" prefHeight="25.0" prefWidth="105.0" text="Population size:" textFill="WHITE">
+        <TextField fx:id="populationSize" layoutX="794.0" layoutY="495.0" opacity="0.6"/>
+        <Label layoutX="700.0" layoutY="496.0" prefHeight="25.0" prefWidth="105.0" text="Population size:"
+               textFill="WHITE">
             <font>
-                <Font name="System Bold" size="12.0" />
+                <Font name="System Bold" size="12.0"/>
             </font>
         </Label>
-        <TextField fx:id="numOfIterations" layoutX="794.0" layoutY="535.0" opacity="0.6" />
-        <Label layoutX="667.0" layoutY="535.0" prefHeight="25.0" prefWidth="130.0" text="Number of iterations:" textFill="WHITE">
+        <TextField fx:id="numOfIterations" layoutX="794.0" layoutY="535.0" opacity="0.6"/>
+        <Label layoutX="667.0" layoutY="535.0" prefHeight="25.0" prefWidth="130.0" text="Number of iterations:"
+               textFill="WHITE">
             <font>
-                <Font name="System Bold" size="12.0" />
+                <Font name="System Bold" size="12.0"/>
             </font>
         </Label>
-        <TextField fx:id="itemsDataFilePath" disable="true" layoutX="740.0" layoutY="590.0" opacity="0.6" prefHeight="25.0" prefWidth="205.0" />
+        <TextField fx:id="itemsDataFilePath" disable="true" layoutX="740.0" layoutY="590.0" opacity="0.6"
+                   prefHeight="25.0" prefWidth="205.0"/>
         <Button layoutX="688.0" layoutY="590.0" mnemonicParsing="false" onAction="#loadItemsData" text="Load">
             <font>
-                <Font name="System Bold" size="12.0" />
+                <Font name="System Bold" size="12.0"/>
             </font>
         </Button>
-        <Label layoutX="596.0" layoutY="590.0" prefHeight="25.0" prefWidth="91.0" text="Items data file:" textFill="WHITE">
+        <Label layoutX="596.0" layoutY="590.0" prefHeight="25.0" prefWidth="91.0" text="Items data file:"
+               textFill="WHITE">
             <font>
-                <Font name="System Bold" size="12.0" />
+                <Font name="System Bold" size="12.0"/>
             </font>
         </Label>
-        <TextArea fx:id="consoleArea" editable="false" layoutX="20.0" layoutY="272.0" opacity="0.6" prefHeight="392.0" prefWidth="511.0">
+        <TextArea fx:id="consoleArea" editable="false" layoutX="20.0" layoutY="272.0" opacity="0.6" prefHeight="392.0"
+                  prefWidth="511.0">
             <font>
-                <Font name="System Bold" size="12.0" />
+                <Font name="System Bold" size="12.0"/>
             </font>
         </TextArea>
-        <RadioButton fx:id="rouletteRadioButton" layoutX="670.0" layoutY="309.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="97.0" selected="true" text="Roulette" textFill="WHITE">
+        <RadioButton fx:id="rouletteRadioButton" layoutX="670.0" layoutY="309.0" mnemonicParsing="false"
+                     prefHeight="25.0" prefWidth="97.0" selected="true" text="Roulette" textFill="WHITE">
             <font>
-                <Font name="System Bold Italic" size="16.0" />
+                <Font name="System Bold Italic" size="16.0"/>
             </font>
-         <toggleGroup>
-            <ToggleGroup fx:id="selection" />
-         </toggleGroup>
+            <toggleGroup>
+                <ToggleGroup fx:id="selection"/>
+            </toggleGroup>
         </RadioButton>
-        <RadioButton fx:id="tournamentRadioButton" layoutX="794.0" layoutY="309.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="139.0" text="Tournament" textFill="WHITE" toggleGroup="$selection">
+        <RadioButton fx:id="tournamentRadioButton" layoutX="794.0" layoutY="309.0" mnemonicParsing="false"
+                     prefHeight="25.0" prefWidth="139.0" text="Tournament" textFill="WHITE" toggleGroup="$selection">
             <font>
-                <Font name="System Bold Italic" size="16.0" />
+                <Font name="System Bold Italic" size="16.0"/>
             </font>
         </RadioButton>
-        <Button layoutX="20.0" layoutY="669.0" mnemonicParsing="false" onAction="#saveLogs" prefHeight="25.0" prefWidth="511.0" text="Save">
+        <Button layoutX="20.0" layoutY="669.0" mnemonicParsing="false" onAction="#saveLogs" prefHeight="25.0"
+                prefWidth="511.0" text="Save">
             <font>
-                <Font name="System Bold" size="12.0" />
+                <Font name="System Bold" size="12.0"/>
             </font>
         </Button>
-        <Button layoutX="559.0" layoutY="659.0" mnemonicParsing="false" onAction="#start" prefHeight="35.0" prefWidth="387.0" text="START">
+        <Button layoutX="559.0" layoutY="659.0" mnemonicParsing="false" onAction="#start" prefHeight="35.0"
+                prefWidth="387.0" text="START">
             <font>
-                <Font name="System Bold" size="16.0" />
+                <Font name="System Bold" size="16.0"/>
             </font>
         </Button>
-        <ImageView fx:id="chart" fitHeight="249.0" fitWidth="511.0" layoutX="20.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
-      <Label layoutX="543.0" layoutY="309.0" prefHeight="25.0" prefWidth="119.0" text="Selection method:" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="12.0" />
-         </font>
-      </Label>
-      <Label layoutX="543.0" layoutY="344.0" prefHeight="25.0" prefWidth="119.0" text="Cross method:" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="12.0" />
-         </font>
-      </Label>
-      <RadioButton fx:id="singlePointRadioButton" layoutX="670.0" layoutY="344.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="121.0" selected="true" text="Singlepoint" textFill="WHITE">
-         <font>
-            <Font name="System Bold Italic" size="16.0" />
-         </font>
-         <toggleGroup>
-            <ToggleGroup fx:id="cross" />
-         </toggleGroup>
-      </RadioButton>
-      <RadioButton fx:id="doublePointRadioButton" layoutX="792.0" layoutY="344.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="Doublepoint" textFill="WHITE" toggleGroup="$cross">
-         <font>
-            <Font name="System Bold Italic" size="16.0" />
-         </font>
-      </RadioButton>
-      <TextField fx:id="backpack_weight" layoutX="794.0" layoutY="382.0" opacity="0.6" prefHeight="35.0" prefWidth="149.0" />
-      <Label layoutX="666.0" layoutY="387.0" prefHeight="25.0" prefWidth="130.0" text="Backpack max weight:" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="12.0" />
-         </font>
-      </Label>
-      <TextField fx:id="mutationChance" layoutX="794.0" layoutY="422.0" opacity="0.6" />
-      <Label layoutX="693.0" layoutY="422.0" prefHeight="25.0" prefWidth="112.0" text="Mutation chance:" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="12.0" />
-         </font>
-      </Label>
+        <ImageView fx:id="chart" fitHeight="249.0" fitWidth="511.0" layoutX="20.0" layoutY="14.0" pickOnBounds="true"
+                   preserveRatio="true"/>
+        <Label layoutX="543.0" layoutY="309.0" prefHeight="25.0" prefWidth="119.0" text="Selection method:"
+               textFill="WHITE">
+            <font>
+                <Font name="System Bold" size="12.0"/>
+            </font>
+        </Label>
+        <Label layoutX="543.0" layoutY="344.0" prefHeight="25.0" prefWidth="119.0" text="Cross method:"
+               textFill="WHITE">
+            <font>
+                <Font name="System Bold" size="12.0"/>
+            </font>
+        </Label>
+        <RadioButton fx:id="singlePointRadioButton" layoutX="670.0" layoutY="344.0" mnemonicParsing="false"
+                     prefHeight="25.0" prefWidth="121.0" selected="true" text="Singlepoint" textFill="WHITE">
+            <font>
+                <Font name="System Bold Italic" size="16.0"/>
+            </font>
+            <toggleGroup>
+                <ToggleGroup fx:id="cross"/>
+            </toggleGroup>
+        </RadioButton>
+        <RadioButton fx:id="doublePointRadioButton" layoutX="792.0" layoutY="344.0" mnemonicParsing="false"
+                     prefHeight="25.0" prefWidth="130.0" text="Doublepoint" textFill="WHITE" toggleGroup="$cross">
+            <font>
+                <Font name="System Bold Italic" size="16.0"/>
+            </font>
+        </RadioButton>
+        <TextField fx:id="backpackWeight" layoutX="794.0" layoutY="382.0" opacity="0.6" prefHeight="35.0"
+                   prefWidth="149.0" text="6404180"/>
+        <Label layoutX="666.0" layoutY="387.0" prefHeight="25.0" prefWidth="130.0" text="Backpack max weight:"
+               textFill="WHITE">
+            <font>
+                <Font name="System Bold" size="12.0"/>
+            </font>
+        </Label>
+        <TextField fx:id="mutationChance" layoutX="794.0" layoutY="422.0" opacity="0.6"/>
+        <Label layoutX="693.0" layoutY="422.0" prefHeight="25.0" prefWidth="112.0" text="Mutation chance:"
+               textFill="WHITE">
+            <font>
+                <Font name="System Bold" size="12.0"/>
+            </font>
+        </Label>
     </children>
 </Pane>

@@ -20,7 +20,7 @@ public class MainFormController {
     private final List<Item> items = new ArrayList<>();
 
     @FXML
-    TextField backpack_weight;
+    TextField backpackWeight;
     @FXML
     TextField crossChance;
     @FXML
@@ -49,14 +49,14 @@ public class MainFormController {
         if (!stringPath.isBlank()) {
             Files.write(Paths.get(stringPath), consoleArea.getText().getBytes());
             consoleArea.setText("");
-            consoleArea.appendText("Logs saved saved to: " + stringPath + "\n");
+            consoleArea.appendText("Logs saved saved to: %s\n".formatted(stringPath));
         }
     }
 
     public void loadItemsData(ActionEvent actionEvent) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
         String stringPath = FileChoose.openChooser("Open items data file ", actionEvent);
         if (!stringPath.isBlank()) {
-            consoleArea.appendText("Items data loaded: " + stringPath + "\n");
+            consoleArea.appendText("Items data loaded: %s\n" .formatted(stringPath));
             List<String> data = Files.readAllLines(Paths.get(stringPath));
             for (String s : data) {
                 String[] itemParameters = s.split(";");
@@ -68,29 +68,49 @@ public class MainFormController {
         }
     }
 
-    public void start(ActionEvent actionEvent) {
-        SelectionMethod sm = SelectionMethod.TOURNAMENT;
-        if (rouletteRadioButton.isSelected()) {
-            sm = SelectionMethod.ROULETTE;
+    public void start() {
+        GenericAlgorithm ga = getGenericAlgorithm();
+
+        List<Backpack> finalPopulation = ga.start(Integer.parseInt(numOfIterations.getText()));
+        consoleArea.appendText(ConsoleInterface.SEPARATOR);
+
+        int i = 1;
+        finalPopulation.sort(new BackpackComparator());
+        for (Backpack bp : finalPopulation) {
+            consoleArea.appendText("%s. weight=%s. value=%s\n".formatted(i, bp.getWeight(), bp.getValue()));
+            i++;
         }
+
+        consoleArea.appendText(ConsoleInterface.SEPARATOR);
+        consoleArea.appendText("Best backpack in final population: %s \n".formatted(finalPopulation.get(0)));
+        consoleArea.appendText(ConsoleInterface.SEPARATOR);
+    }
+
+    private GenericAlgorithm getGenericAlgorithm() {
+        return new GenericAlgorithm(
+                items,
+                Integer.parseInt(backpackWeight.getText()),
+                Integer.parseInt(populationSize.getText()),
+                getSelectionMethod(),
+                getCrossMethod(),
+                Double.parseDouble(crossChance.getText()),
+                Double.parseDouble(mutationChance.getText())
+        );
+    }
+
+    private CrossMethod getCrossMethod() {
         CrossMethod cm = CrossMethod.DOUBLE_POINT;
         if (singlePointRadioButton.isSelected()) {
             cm = CrossMethod.SINGLE_POINT;
         }
-        GenericAlgorithm ga = new GenericAlgorithm(items, Integer.parseInt(backpack_weight.getText()),
-                Integer.parseInt(populationSize.getText()), sm, cm,
-                Double.parseDouble(crossChance.getText()), Double.parseDouble(mutationChance.getText()));
-        List<Backpack> finalPopulation = ga.start(Integer.parseInt(numOfIterations.getText()));
-        consoleArea.appendText("================================================ \n");
-        int i = 1;
+        return cm;
+    }
 
-        finalPopulation.sort(new BackpackComparator());
-        for (Backpack bp : finalPopulation) {
-            consoleArea.appendText(i + ". weight=" + bp.getWeight() + ". value=" + bp.getValue() + "\n");
-            i++;
+    private SelectionMethod getSelectionMethod() {
+        SelectionMethod sm = SelectionMethod.TOURNAMENT;
+        if (rouletteRadioButton.isSelected()) {
+            sm = SelectionMethod.ROULETTE;
         }
-        consoleArea.appendText("================================================ \n");
-        consoleArea.appendText("Best backpack in final population: " + finalPopulation.get(0) + "\n");
-        consoleArea.appendText("================================================ \n");
+        return sm;
     }
 }

@@ -63,10 +63,9 @@ public class GenericAlgorithm {
         //Move some old population elements to new one
         if (nextPopulation.size() < populationSize) {
             int populationDiff = populationSize - nextPopulation.size();
+            population.sort(new BackpackComparator());
             for (int i = 0; i < populationDiff; i++) {
-                Backpack fromOldPopulation = population.get((int) Math.round(Math.random() * (populationSize - nextPopulation.size())));
-                population.remove(fromOldPopulation);
-                nextPopulation.add(fromOldPopulation);
+                nextPopulation.add(population.get(i));
             }
         }
 

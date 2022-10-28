@@ -12,10 +12,11 @@ public class GenericAlgorithm {
     private final int populationSize;
     private final SelectionMethod selectionMethod;
     private final CrossMethod crossMethod;
-
     private final double crossChance;
-
     private final double mutationChance;
+    private final List<Integer> iterations = new ArrayList<>();
+    private final List<Double> avgPopulationValues = new ArrayList<>();
+    private final List<Double> maxPopulationValues = new ArrayList<>();
 
     public GenericAlgorithm(List<Item> items, int backpackMaxWeight, int populationSize, SelectionMethod selectionMethod,
                             CrossMethod crossMethod, double crossChance, double mutationChance) {
@@ -30,10 +31,39 @@ public class GenericAlgorithm {
 
     public List<Backpack> start(int numOfIterations) {
         List<Backpack> population = initPopulation();
+        addPointsToData(population, 0);
         for (int i = 0; i < numOfIterations; i++) {
             population = newPopulation(population);
+            addPointsToData(population, i + 1);
         }
         return population;
+    }
+
+    public void addPointsToData(List<Backpack> population, int iteration) {
+        double maxValue = 0;
+        double avgValue = 0;
+        for (Backpack bp : population) {
+            if (bp.getValue() > maxValue) {
+                maxValue = bp.getValue();
+            }
+            avgValue += bp.getValue();
+        }
+        avgValue /= populationSize;
+        iterations.add(iteration);
+        maxPopulationValues.add(maxValue);
+        avgPopulationValues.add(avgValue);
+    }
+
+    public List<Double> getAvgPopulationValues() {
+        return avgPopulationValues;
+    }
+
+    public List<Double> getMaxPopulationValues() {
+        return maxPopulationValues;
+    }
+
+    public List<Integer> getIterations() {
+        return iterations;
     }
 
     public List<Backpack> initPopulation() {

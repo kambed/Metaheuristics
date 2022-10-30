@@ -1,10 +1,10 @@
 package pl.meta.backend;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Function;
+
+import static java.util.Comparator.comparing;
 
 public class GenericAlgorithm {
     private final List<Item> items;
@@ -40,18 +40,11 @@ public class GenericAlgorithm {
     }
 
     public void addPointsToData(List<Backpack> population, int iteration) {
-        double maxValue = 0;
-        double avgValue = 0;
-        for (Backpack bp : population) {
-            if (bp.getValue() > maxValue) {
-                maxValue = bp.getValue();
-            }
-            avgValue += bp.getValue();
-        }
-        avgValue /= populationSize;
         iterations.add(iteration);
-        maxPopulationValues.add(maxValue);
-        avgPopulationValues.add(avgValue);
+        maxPopulationValues.add((double) population.stream().max(comparing(Backpack::getValue)).get().getValue());
+        avgPopulationValues.add(
+            population.stream().mapToDouble(backpack -> (double) backpack.getValue()).average().orElse(0.0)
+        );
     }
 
     public List<Double> getAvgPopulationValues() {

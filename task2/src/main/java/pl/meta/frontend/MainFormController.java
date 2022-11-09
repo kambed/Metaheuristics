@@ -3,9 +3,13 @@ package pl.meta.frontend;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.jfree.chart.ChartUtilities;
 import pl.meta.backend.*;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
@@ -42,6 +46,8 @@ public class MainFormController {
     @FXML
     ImageView chart;
     @FXML
+    ImageView chart2;
+    @FXML
     TextArea consoleArea;
 
     public void saveLogs(ActionEvent actionEvent) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
@@ -56,7 +62,7 @@ public class MainFormController {
     public void loadItemsData(ActionEvent actionEvent) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, IOException {
         String stringPath = FileChoose.openChooser("Open items data file ", actionEvent);
         if (!stringPath.isBlank()) {
-            consoleArea.appendText("Items data loaded: %s\n" .formatted(stringPath));
+            consoleArea.appendText("Items data loaded: %s\n".formatted(stringPath));
             List<String> data = Files.readAllLines(Paths.get(stringPath));
             for (String s : data) {
                 String[] itemParameters = s.split(";");
@@ -68,7 +74,7 @@ public class MainFormController {
         }
     }
 
-    public void start() {
+    public void start() throws IOException {
         GenericAlgorithm ga = getGenericAlgorithm();
 
         List<Backpack> finalPopulation = ga.start(Integer.parseInt(numOfIterations.getText()));
@@ -84,6 +90,26 @@ public class MainFormController {
         consoleArea.appendText(ConsoleInterface.SEPARATOR);
         consoleArea.appendText("Best backpack in final population: %s \n".formatted(finalPopulation.get(0)));
         consoleArea.appendText(ConsoleInterface.SEPARATOR);
+
+        try {
+            ChartUtilities.saveChartAsPNG(
+                    new File("chart.png"),
+                    ChartGenerator.generatePlot(ga.getIterations().toArray(new Integer[0]),
+                            ga.getAvgPopulationValues().toArray(new Double[0]), "Avg population value"),
+                    400, 220);
+            FileInputStream input = new FileInputStream("chart.png");
+            chart.setImage(new Image(input));
+
+            ChartUtilities.saveChartAsPNG(
+                    new File("chart2.png"),
+                    ChartGenerator.generatePlot(ga.getIterations().toArray(new Integer[0]),
+                            ga.getMaxPopulationValues().toArray(new Double[0]), "Max population value"),
+                    400, 220);
+            input = new FileInputStream("chart2.png");
+            chart2.setImage(new Image(input));
+        } catch (IOException e) {
+            consoleArea.appendText("Wystapił problem przy generowaniu wykresu. \n");
+        }
     }
 
     private GenericAlgorithm getGenericAlgorithm() {

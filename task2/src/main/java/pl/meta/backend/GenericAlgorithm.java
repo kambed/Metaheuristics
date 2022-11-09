@@ -1,10 +1,10 @@
 package pl.meta.backend;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Function;
+
+import static java.util.Comparator.comparing;
 
 public class GenericAlgorithm {
     private final List<Item> items;
@@ -12,10 +12,11 @@ public class GenericAlgorithm {
     private final int populationSize;
     private final SelectionMethod selectionMethod;
     private final CrossMethod crossMethod;
-
     private final double crossChance;
-
     private final double mutationChance;
+    private final List<Integer> iterations = new ArrayList<>();
+    private final List<Double> avgPopulationValues = new ArrayList<>();
+    private final List<Double> maxPopulationValues = new ArrayList<>();
 
     public GenericAlgorithm(List<Item> items, int backpackMaxWeight, int populationSize, SelectionMethod selectionMethod,
                             CrossMethod crossMethod, double crossChance, double mutationChance) {
@@ -30,10 +31,32 @@ public class GenericAlgorithm {
 
     public List<Backpack> start(int numOfIterations) {
         List<Backpack> population = initPopulation();
+        addPointsToData(population, 0);
         for (int i = 0; i < numOfIterations; i++) {
             population = newPopulation(population);
+            addPointsToData(population, i + 1);
         }
         return population;
+    }
+
+    public void addPointsToData(List<Backpack> population, int iteration) {
+        iterations.add(iteration);
+        maxPopulationValues.add((double) population.stream().max(comparing(Backpack::getValue)).get().getValue());
+        avgPopulationValues.add(
+            population.stream().mapToDouble(backpack -> (double) backpack.getValue()).average().orElse(0.0)
+        );
+    }
+
+    public List<Double> getAvgPopulationValues() {
+        return avgPopulationValues;
+    }
+
+    public List<Double> getMaxPopulationValues() {
+        return maxPopulationValues;
+    }
+
+    public List<Integer> getIterations() {
+        return iterations;
     }
 
     public List<Backpack> initPopulation() {

@@ -97,7 +97,7 @@ public class GenericAlgorithm {
             if (Math.random() <= mutationChance) {
                 int bitToChange = (int) Math.round(Math.random() * (items.size() - 1));
                 nextPopulation.get(i).setItemOccurrence(bitToChange,
-                        nextPopulation.get(i).getItemsOccurrence()[bitToChange]);
+                        !nextPopulation.get(i).getItemsOccurrence()[bitToChange]);
             }
         }
 

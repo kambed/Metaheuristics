@@ -9,7 +9,6 @@ public class AntAlgorithm {
     Feromons feromons;
     List<Ant> ants = new ArrayList<>();
     int numOfIterations;
-    double feromonEvaporation;
     double feromonWeight;
     double heuristicWeight;
     double randomChoiceChance;
@@ -22,9 +21,8 @@ public class AntAlgorithm {
         int numOfPlaces = places.size();
         this.numOfPlaces = numOfPlaces;
         this.distances = new Distances(places);
-        this.feromons = new Feromons(numOfPlaces);
+        this.feromons = new Feromons(numOfPlaces, feromonEvaporation);
         this.numOfIterations = numOfIterations;
-        this.feromonEvaporation = feromonEvaporation;
         this.feromonWeight = feromonWeight;
         this.heuristicWeight = heuristicWeight;
         this.randomChoiceChance = randomChoiceChance;
@@ -48,6 +46,10 @@ public class AntAlgorithm {
                 if (route < shortestRoute) {
                     shortestRoute = route;
                 }
+            }
+            feromons.evaporate();
+            for (Ant a : ants) {
+                a.addFeromons();
             }
             ants.clear();
             for (int j = 0; j < numOfAnts; j++) {

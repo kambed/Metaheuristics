@@ -11,6 +11,7 @@ public class Ant {
     int numOfPlacesToVisit;
     double heuristicWeight;
     double feromonWeight;
+    double route = -1;
 
     public Ant(int startPosition, Distances distances, Feromons feromons, double randomMoveChance, int placesToVisit,
                double heuristicWeight, double feromonWeight) {
@@ -40,7 +41,7 @@ public class Ant {
             for (int i = 0; i < numOfPlacesToVisit; i++) {
                 if (!visited.contains(i)) {
                     double chanceValue = Math.pow(feromons.getFeromon(currentPosition, i), feromonWeight) *
-                            Math.pow(distances.getDistance(currentPosition, i), heuristicWeight);
+                            Math.pow((1 / distances.getDistance(currentPosition, i)), heuristicWeight);
                     sumOfChances += chanceValue;
                     chance.put(i, chanceValue);
                 }
@@ -59,14 +60,28 @@ public class Ant {
         }
     }
 
-    public double calculateWholeRoute() {
-        double route = 0;
-        int lastIndex = -1;
-        for (Integer id : visited) {
-            if (lastIndex != -1) {
-                route += distances.getDistance(lastIndex, id);
+    public void addFeromons() {
+        int previousIndex = -1;
+        for (Integer v : visited) {
+            if (previousIndex != -1) {
+                feromons.setFeromon(previousIndex, v, feromons.getFeromon(previousIndex, v) +
+                        (1 / calculateWholeRoute()));
             }
-            lastIndex = id;
+            previousIndex = v;
+        }
+    }
+
+    public double calculateWholeRoute() {
+        if (route == -1) {
+            double route = 0;
+            int lastIndex = -1;
+            for (Integer id : visited) {
+                if (lastIndex != -1) {
+                    route += distances.getDistance(lastIndex, id);
+                }
+                lastIndex = id;
+            }
+            this.route = route;
         }
         return route;
     }

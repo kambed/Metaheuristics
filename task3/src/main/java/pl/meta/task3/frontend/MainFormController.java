@@ -77,5 +77,7 @@ public class MainFormController {
                 Integer.parseInt(numOfIterations.getText()), Double.parseDouble(feromonEvaporation.getText()),
                 Double.parseDouble(feromonWeight.getText()), Double.parseDouble(heuristicWeight.getText()),
                 Double.parseDouble(randomChance.getText()));
+        double shortestRoute = aa.start();
+        consoleArea.appendText("Shortest route: " + shortestRoute + "\n");
     }
 }

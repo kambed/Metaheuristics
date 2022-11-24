@@ -73,11 +73,16 @@ public class MainFormController {
     }
 
     public void start() {
-        AntAlgorithm aa = new AntAlgorithm(items, Integer.parseInt(amountOfAnts.getText()),
-                Integer.parseInt(numOfIterations.getText()), Double.parseDouble(feromonEvaporation.getText()),
-                Double.parseDouble(feromonWeight.getText()), Double.parseDouble(heuristicWeight.getText()),
-                Double.parseDouble(randomChance.getText()));
-        double shortestRoute = aa.start();
-        consoleArea.appendText("Shortest route: " + shortestRoute + "\n");
+        for (int i = 0; i < 10; i++) {
+            new Thread(
+                    () -> {
+                        AntAlgorithm aa = new AntAlgorithm(items, Integer.parseInt(amountOfAnts.getText()),
+                                Integer.parseInt(numOfIterations.getText()), Double.parseDouble(feromonEvaporation.getText()),
+                                Double.parseDouble(feromonWeight.getText()), Double.parseDouble(heuristicWeight.getText()),
+                                Double.parseDouble(randomChance.getText()));
+                        double shortestRoute = aa.start();
+                        consoleArea.appendText("Shortest route: " + shortestRoute + "\n");
+                    }).start();
+        }
     }
 }

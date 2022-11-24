@@ -8,7 +8,7 @@ public class Feromons {
 
     public Feromons(int numOfElements, double evaporationRate) {
         weights = new double[numOfElements][numOfElements];
-        Arrays.stream(weights).forEach(row -> Arrays.fill(row, 1));
+        Arrays.stream(weights).forEach(row -> Arrays.fill(row, 1/10000.0));
         this.evaporationRate = evaporationRate;
     }
 

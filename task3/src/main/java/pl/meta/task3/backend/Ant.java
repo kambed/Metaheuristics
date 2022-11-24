@@ -85,4 +85,8 @@ public class Ant {
         }
         return route;
     }
+
+    public List<Integer> getVisited() {
+        return visited;
+    }
 }

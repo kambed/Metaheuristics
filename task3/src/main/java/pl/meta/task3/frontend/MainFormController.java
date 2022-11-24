@@ -4,11 +4,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.jfree.chart.ChartUtilities;
 import pl.meta.task3.backend.AntAlgorithm;
 import pl.meta.task3.backend.Distances;
 import pl.meta.task3.backend.Place;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
@@ -73,7 +77,7 @@ public class MainFormController {
     }
 
     public void start() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             new Thread(
                     () -> {
                         AntAlgorithm aa = new AntAlgorithm(items, Integer.parseInt(amountOfAnts.getText()),
@@ -82,6 +86,26 @@ public class MainFormController {
                                 Double.parseDouble(randomChance.getText()));
                         double shortestRoute = aa.start();
                         consoleArea.appendText("Shortest route: " + shortestRoute + "\n");
+
+                        try {
+                            ChartUtilities.saveChartAsPNG(
+                                    new File("chart.png"),
+                                    ChartGenerator.generatePlot(aa.getIterations().toArray(new Integer[0]),
+                                            aa.getAvgPopulationValues().toArray(new Double[0]), "Avg population value"),
+                                    400, 220);
+                            FileInputStream input = new FileInputStream("chart.png");
+                            chart.setImage(new Image(input));
+
+                            ChartUtilities.saveChartAsPNG(
+                                    new File("chart2.png"),
+                                    ChartGenerator.generatePlot(aa.getIterations().toArray(new Integer[0]),
+                                            aa.getMinPopulationValues().toArray(new Double[0]), "Min population value"),
+                                    400, 220);
+                            input = new FileInputStream("chart2.png");
+                            chart2.setImage(new Image(input));
+                        } catch (IOException e) {
+                            consoleArea.appendText("Wystapił problem przy generowaniu wykresu. \n");
+                        }
                     }).start();
         }
     }

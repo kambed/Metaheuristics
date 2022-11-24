@@ -3,15 +3,15 @@ package pl.meta.task3.backend;
 import java.util.*;
 
 public class Ant {
-    List<Integer> visited = new ArrayList<>();
-    Distances distances;
-    Feromons feromons;
-    int currentPosition;
-    double randomMoveChance;
-    int numOfPlacesToVisit;
-    double heuristicWeight;
-    double feromonWeight;
-    double route = -1;
+    private List<Integer> visited = new ArrayList<>();
+    private Distances distances;
+    private Feromons feromons;
+    private int currentPosition;
+    private double randomMoveChance;
+    private int numOfPlacesToVisit;
+    private double heuristicWeight;
+    private double feromonWeight;
+    private double route = -1;
 
     public Ant(Distances distances, Feromons feromons, double randomMoveChance, int placesToVisit,
                double heuristicWeight, double feromonWeight) {

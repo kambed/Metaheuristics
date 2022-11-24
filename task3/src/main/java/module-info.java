@@ -4,6 +4,7 @@ module pl.meta.task3.frontend {
 
     requires java.datatransfer;
     requires java.desktop;
+    requires jfreechart;
 
     opens pl.meta.task3.frontend to javafx.fxml;
     exports pl.meta.task3.frontend;

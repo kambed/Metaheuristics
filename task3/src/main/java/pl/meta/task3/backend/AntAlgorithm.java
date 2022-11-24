@@ -7,16 +7,19 @@ import java.util.List;
 import java.util.Random;
 
 public class AntAlgorithm {
-    Distances distances;
-    Feromons feromons;
-    List<Ant> ants = new ArrayList<>();
-    int numOfIterations;
-    double feromonWeight;
-    double heuristicWeight;
-    double randomChoiceChance;
-    int numOfPlaces;
-    int numOfAnts;
-    List<Place> places;
+    private Distances distances;
+    private Feromons feromons;
+    private List<Ant> ants = new ArrayList<>();
+    private int numOfIterations;
+    private double feromonWeight;
+    private double heuristicWeight;
+    private double randomChoiceChance;
+    private int numOfPlaces;
+    private int numOfAnts;
+    private List<Place> places;
+    private final List<Integer> iterations = new ArrayList<>();
+    private final List<Double> avgPopulationValues = new ArrayList<>();
+    private final List<Double> minPopulationValues = new ArrayList<>();
 
     public AntAlgorithm(List<Place> places, int numOfAnts,
                         int numOfIterations, double feromonEvaporation, double feromonWeight,
@@ -41,18 +44,23 @@ public class AntAlgorithm {
         double shortestRoute = Double.MAX_VALUE;
         Ant bestAnt = null;
         for (int i = 0; i < numOfIterations; i++) {
+            iterations.add(i);
             for (int j = 0; j < numOfPlaces - 1; j++) {
                 for (Ant a : ants) {
                     a.move();
                 }
             }
+            double avgRouteInThisIteration = 0;
             for (Ant a : ants) {
                 double route = a.calculateWholeRoute();
+                avgRouteInThisIteration += route;
                 if (route < shortestRoute) {
                     shortestRoute = route;
                     bestAnt = a;
                 }
             }
+            avgPopulationValues.add(avgRouteInThisIteration / ants.size());
+            minPopulationValues.add(shortestRoute);
             feromons.evaporate();
             for (Ant a : ants) {
                 a.addFeromons();
@@ -78,5 +86,17 @@ public class AntAlgorithm {
         }
         PathGenerator.generateRoad(x, y, labels);
         return shortestRoute;
+    }
+
+    public List<Integer> getIterations() {
+        return iterations;
+    }
+
+    public List<Double> getAvgPopulationValues() {
+        return avgPopulationValues;
+    }
+
+    public List<Double> getMinPopulationValues() {
+        return minPopulationValues;
     }
 }

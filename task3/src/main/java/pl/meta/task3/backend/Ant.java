@@ -13,8 +13,9 @@ public class Ant {
     double feromonWeight;
     double route = -1;
 
-    public Ant(int startPosition, Distances distances, Feromons feromons, double randomMoveChance, int placesToVisit,
+    public Ant(Distances distances, Feromons feromons, double randomMoveChance, int placesToVisit,
                double heuristicWeight, double feromonWeight) {
+        int startPosition = (new Random()).nextInt(placesToVisit - 1);
         this.currentPosition = startPosition;
         visited.add(startPosition);
         this.distances = distances;

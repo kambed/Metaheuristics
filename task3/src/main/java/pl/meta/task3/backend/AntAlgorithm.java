@@ -32,7 +32,7 @@ public class AntAlgorithm {
         this.numOfAnts = numOfAnts;
         this.places = places;
         for (int i = 0; i < numOfAnts; i++) {
-            ants.add(new Ant((new Random()).nextInt(numOfPlaces - 1), distances, feromons,
+            ants.add(new Ant(distances, feromons,
                     randomChoiceChance, numOfPlaces, heuristicWeight, feromonWeight));
         }
     }
@@ -59,7 +59,7 @@ public class AntAlgorithm {
             }
             ants.clear();
             for (int j = 0; j < numOfAnts; j++) {
-                ants.add(new Ant((new Random()).nextInt(numOfPlaces - 1), distances, feromons,
+                ants.add(new Ant(distances, feromons,
                         randomChoiceChance, numOfPlaces, heuristicWeight, feromonWeight));
             }
         }

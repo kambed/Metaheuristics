@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import pl.meta.task4.backend.Particle;
 import pl.meta.task4.backend.ParticleSwarmAlgorithm;
 
 import java.io.IOException;
@@ -16,7 +15,7 @@ import java.util.Map;
 
 public class MainFormController {
     public static final String MAIN_FORM_RESOURCE = "MainForm.fxml";
-    public static final String MAIN_FORM_TITLE = "Generic Algorithm";
+    public static final String MAIN_FORM_TITLE = "Particle Swarm Algorithm";
 
     @FXML
     TextField amountOfIterations;

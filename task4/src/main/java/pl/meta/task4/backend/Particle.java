@@ -7,8 +7,7 @@ import java.util.Random;
 public class Particle {
     private double x;
     private double y;
-    private double speedX;
-    private double speedY;
+    private double speed;
     private double adaptation;
     private String function;
     private double bestX;
@@ -33,8 +32,7 @@ public class Particle {
         Random r = new Random();
         this.x = r.nextDouble(maxX - minX) + minX;
         this.y = r.nextDouble(maxY - minY) + minY;
-        this.speedX = 0;
-        this.speedY = 0;
+        this.speed = 0;
         this.adaptation = 0;
         this.function = function;
         calculateAdaptation();
@@ -57,28 +55,26 @@ public class Particle {
     }
 
     public void move() {
-        double inertionPartX = inertion * speedX;
-        double inertionPartY = inertion * speedY;
+        double inertionPart = inertion * speed;
         Random r = new Random();
         double cognitionAcceleration = cognition * r.nextDouble(1);
-        double cognitionPartX = cognitionAcceleration * Math.abs(bestX - x);
-        double cognitionPartY = cognitionAcceleration * Math.abs(bestY - y);
+        double cognitionPart = cognitionAcceleration * Math.abs(Math.sqrt((bestX - x) * (bestX - x) +
+                (bestY - y) * (bestY - y)));
 
         double socialAcceleration = social * r.nextDouble(1);
-        double socialPartX = socialAcceleration * Math.abs(bestXInSwarm - x);
-        double socialPartY = socialAcceleration * Math.abs(bestYInSwarm - y);
+        double socialPart = socialAcceleration * Math.abs(Math.sqrt((bestXInSwarm - x) * (bestXInSwarm - x) +
+                (bestYInSwarm - y) * (bestYInSwarm - y)));
 
-        speedX = inertionPartX + cognitionPartX + socialPartX;
-        speedY = inertionPartY + cognitionPartY + socialPartY;
+        speed = inertionPart + cognitionPart + socialPart;
 
-        x = x + speedX;
+        x = x + speed;
         if (x > maxX) {
             x = maxX;
         }
         if (x < minX) {
             x = minX;
         }
-        y = y + speedY;
+        y = y + speed;
         if (y > maxY) {
             y = maxY;
         }
@@ -104,20 +100,12 @@ public class Particle {
         this.y = y;
     }
 
-    public double getSpeedX() {
-        return speedX;
+    public double getSpeed() {
+        return speed;
     }
 
-    public void setSpeedX(double speedX) {
-        this.speedX = speedX;
-    }
-
-    public double getSpeedY() {
-        return speedY;
-    }
-
-    public void setSpeedY(double speedY) {
-        this.speedY = speedY;
+    public void setSpeed(double speed) {
+        this.speed = speed;
     }
 
     public double getAdaptation() {

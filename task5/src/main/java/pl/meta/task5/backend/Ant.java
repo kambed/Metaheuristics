@@ -1,9 +1,12 @@
 package pl.meta.task5.backend;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Ant {
     private List<Integer> visited = new ArrayList<>();
+    private List<Integer> toVisit = new ArrayList<>();
     private Distances distances;
     private Feromons feromons;
     private int nextPossiblePosition;
@@ -18,10 +21,9 @@ public class Ant {
     private double currentDemand;
     private double maxTime;
     private double currentTime;
-    private int numOfVehicles;
 
     public Ant(Distances distances, Feromons feromons, double randomMoveChance, int placesToVisit,
-               double heuristicWeight, double feromonWeight, double maxDemand, int numOfVehicles) {
+               double heuristicWeight, double feromonWeight, double maxDemand) {
         this.currentPosition = 0;
         visited.add(this.currentPosition);
         this.distances = distances;
@@ -31,18 +33,20 @@ public class Ant {
         this.heuristicWeight = heuristicWeight;
         this.feromonWeight = feromonWeight;
         this.maxDemand = maxDemand;
-        this.numOfVehicles = numOfVehicles;
+        toVisit = IntStream.rangeClosed(1, numOfPlacesToVisit)
+                .boxed().collect(Collectors.toList());
     }
 
     public void move() {
         //move random
+        if (currentPosition != 0 && currentDemand > maxDemand * 0.8) {
+            toVisit.add(0);
+        } else {
+            toVisit.remove((Integer) 0);
+        }
         if (Math.random() < randomMoveChance) {
-            int nextRandomPlaceIndex;
             Random random = new Random();
-            do {
-                nextRandomPlaceIndex = random.nextInt(numOfPlacesToVisit);
-            } while (visited.contains(nextRandomPlaceIndex) || nextRandomPlaceIndex == 0);
-            nextPossiblePosition = nextRandomPlaceIndex;
+            nextPossiblePosition = toVisit.get(random.nextInt(toVisit.size()));
         } else {
             Map<Integer, Double> chance = new HashMap<>();
             double sumOfChances = 0;
@@ -67,12 +71,12 @@ public class Ant {
         }
         Place p = distances.getPlace(nextPossiblePosition);
         if (currentDemand + p.getDemand() > maxDemand) {
-            currentPosition = 0;
             currentDemand = 0;
-        } else {
-            currentPosition = nextPossiblePosition;
+            visited.add(0);
         }
+        currentPosition = nextPossiblePosition;
         visited.add(currentPosition);
+        toVisit.remove((Integer) currentPosition);
         currentDemand += p.getDemand();
     }
 
@@ -108,5 +112,13 @@ public class Ant {
 
     public List<Integer> getVisited() {
         return visited;
+    }
+
+    public int getToVisitSize() {
+        return toVisit.size();
+    }
+
+    public List<Integer> getToVisit() {
+        return toVisit;
     }
 }

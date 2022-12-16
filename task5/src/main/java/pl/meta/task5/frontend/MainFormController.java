@@ -27,8 +27,6 @@ public class MainFormController {
     private final List<Place> items = new ArrayList<>();
 
     @FXML
-    TextField amountOfVehicles;
-    @FXML
     TextField vehicleDemand;
     @FXML
     TextField amountOfAnts;
@@ -90,8 +88,7 @@ public class MainFormController {
                         AntAlgorithm aa = new AntAlgorithm(items, Integer.parseInt(amountOfAnts.getText()),
                                 Integer.parseInt(numOfIterations.getText()), Double.parseDouble(feromonEvaporation.getText()),
                                 Double.parseDouble(feromonWeight.getText()), Double.parseDouble(heuristicWeight.getText()),
-                                Double.parseDouble(randomChance.getText()), Integer.parseInt(amountOfVehicles.getText()),
-                                Double.parseDouble(vehicleDemand.getText()));
+                                Double.parseDouble(randomChance.getText()), Double.parseDouble(vehicleDemand.getText()));
                         double shortestRoute = aa.start();
                         consoleArea.appendText("Shortest route: " + shortestRoute + "\n");
 

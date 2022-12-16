@@ -16,7 +16,6 @@ public class AntAlgorithm {
     private int numOfPlaces;
     private int numOfAnts;
     private double vehicleMaxDemand;
-    private int numOfVehicles;
     private List<Place> places;
     private final List<Integer> iterations = new ArrayList<>();
     private final List<Double> avgPopulationValues = new ArrayList<>();
@@ -24,8 +23,7 @@ public class AntAlgorithm {
 
     public AntAlgorithm(List<Place> places, int numOfAnts,
                         int numOfIterations, double feromonEvaporation, double feromonWeight,
-                        double heuristicWeight, double randomChoiceChance,
-                        int numOfVehicles, double vehicleMaxDemand) {
+                        double heuristicWeight, double randomChoiceChance, double vehicleMaxDemand) {
         int numOfPlaces = places.size();
         this.numOfPlaces = numOfPlaces;
         this.distances = new Distances(places);
@@ -37,11 +35,10 @@ public class AntAlgorithm {
         this.numOfAnts = numOfAnts;
         this.places = places;
         this.vehicleMaxDemand = vehicleMaxDemand;
-        this.numOfVehicles = numOfVehicles;
         for (int i = 0; i < numOfAnts; i++) {
             ants.add(new Ant(distances, feromons,
                     randomChoiceChance, numOfPlaces, heuristicWeight,
-                    feromonWeight, vehicleMaxDemand, numOfVehicles));
+                    feromonWeight, vehicleMaxDemand));
         }
     }
 
@@ -50,10 +47,11 @@ public class AntAlgorithm {
         Ant bestAnt = null;
         for (int i = 0; i < numOfIterations; i++) {
             iterations.add(i);
-            for (int j = 0; j < numOfPlaces - 1; j++) {
-                for (Ant a : ants) {
+            for (Ant a : ants) {
+                while (a.getToVisitSize() > 1 || (a.getToVisitSize() == 1 && a.getToVisit().get(0) != 0)) {
                     a.move();
                 }
+                a.comeBackToBase();
             }
             double avgRouteInThisIteration = 0;
             for (Ant a : ants) {
@@ -74,7 +72,7 @@ public class AntAlgorithm {
             for (int j = 0; j < numOfAnts; j++) {
                 ants.add(new Ant(distances, feromons,
                         randomChoiceChance, numOfPlaces, heuristicWeight,
-                        feromonWeight, vehicleMaxDemand, numOfVehicles));
+                        feromonWeight, vehicleMaxDemand));
             }
         }
         List<Double> x = new ArrayList<>();

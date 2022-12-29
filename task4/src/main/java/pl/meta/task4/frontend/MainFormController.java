@@ -4,9 +4,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.jfree.chart.ChartUtilities;
 import pl.meta.task4.backend.ParticleSwarmAlgorithm;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
@@ -64,24 +68,24 @@ public class MainFormController {
         consoleArea.appendText("X: " + extremum.get("X") + "\n");
         consoleArea.appendText("Y: " + extremum.get("Y") + "\n");
 
-//        try {
-//            ChartUtilities.saveChartAsPNG(
-//                    new File("chart.png"),
-//                    ChartGenerator.generatePlot(aa.getIterations().toArray(new Integer[0]),
-//                            aa.getAvgPopulationValues().toArray(new Double[0]), "Avg population value"),
-//                    400, 220);
-//            FileInputStream input = new FileInputStream("chart.png");
-//            chart.setImage(new Image(input));
-//
-//            ChartUtilities.saveChartAsPNG(
-//                    new File("chart2.png"),
-//                    ChartGenerator.generatePlot(aa.getIterations().toArray(new Integer[0]),
-//                            aa.getMinPopulationValues().toArray(new Double[0]), "Min population value"),
-//                    400, 220);
-//            input = new FileInputStream("chart2.png");
-//            chart2.setImage(new Image(input));
-//        } catch (IOException e) {
-//            consoleArea.appendText("Wystapił problem przy generowaniu wykresu. \n");
-//        }
+        try {
+            ChartUtilities.saveChartAsPNG(
+                    new File("chart.png"),
+                    ChartGenerator.generatePlot(psa.getIterations().toArray(new Integer[0]),
+                            psa.getAvgPopulationValues().toArray(new Double[0]), "Avg population value"),
+                    400, 220);
+            FileInputStream input = new FileInputStream("chart.png");
+            chart.setImage(new Image(input));
+
+            ChartUtilities.saveChartAsPNG(
+                    new File("chart2.png"),
+                    ChartGenerator.generatePlot(psa.getIterations().toArray(new Integer[0]),
+                            psa.getMinPopulationValues().toArray(new Double[0]), "Min population value"),
+                    400, 220);
+            input = new FileInputStream("chart2.png");
+            chart2.setImage(new Image(input));
+        } catch (IOException e) {
+            consoleArea.appendText("Wystapił problem przy generowaniu wykresu. \n");
+        }
     }
 }

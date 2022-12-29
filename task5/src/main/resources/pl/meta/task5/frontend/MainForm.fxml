@@ -74,14 +74,8 @@
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <TextField fx:id="amountOfVehicles" layoutX="792.0" layoutY="320.0" opacity="0.6" prefHeight="25.0" prefWidth="149.0" />
-      <TextField fx:id="vehicleDemand" layoutX="792.0" layoutY="289.0" opacity="0.6" prefHeight="25.0" prefWidth="149.0" />
-      <Label layoutX="676.0" layoutY="320.0" prefHeight="25.0" prefWidth="121.0" text="Amount of vehicles:" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="12.0" />
-         </font>
-      </Label>
-      <Label layoutX="700.0" layoutY="289.0" prefHeight="25.0" prefWidth="97.0" text="Vehicle demand:" textFill="WHITE">
+      <TextField fx:id="vehicleDemand" layoutX="792.0" layoutY="321.0" opacity="0.6" prefHeight="25.0" prefWidth="149.0" />
+      <Label layoutX="700.0" layoutY="321.0" prefHeight="25.0" prefWidth="97.0" text="Vehicle demand:" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>

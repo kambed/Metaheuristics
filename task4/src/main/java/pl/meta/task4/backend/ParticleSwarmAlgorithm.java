@@ -9,6 +9,9 @@ public class ParticleSwarmAlgorithm {
     private final int numOfParticles;
     private final int numOfIterations;
     private final List<Particle> particles = new ArrayList<>();
+    private final List<Integer> iterations = new ArrayList<>();
+    private final List<Double> avgPopulationValues = new ArrayList<>();
+    private final List<Double> minPopulationValues = new ArrayList<>();
 
     public ParticleSwarmAlgorithm(int numOfIterations, int numOfParticles, double maxX, double minX, double maxY, double minY,
                                   String function, double inertion, double cognition, double social) {
@@ -37,6 +40,7 @@ public class ParticleSwarmAlgorithm {
         for (int i = 0; i < numOfIterations; i++) {
             double bestAdaptation = Double.MAX_VALUE;
             Particle bestParticle = null;
+            double avgAdaptation = 0;
             for (Particle p : particles) {
                 p.move();
                 if (p.getAdaptation() < bestAdaptation) {
@@ -48,16 +52,32 @@ public class ParticleSwarmAlgorithm {
                     globalBestX = p.getX();
                     globalBestY = p.getY();
                 }
+                avgAdaptation += p.getAdaptation();
             }
             for (Particle p : particles) {
                 p.setBestXInSwarm(bestParticle.getX());
                 p.setBestYInSwarm(bestParticle.getY());
             }
+            iterations.add(i + 1);
+            minPopulationValues.add(bestAdaptation);
+            avgPopulationValues.add(avgAdaptation / numOfParticles);
         }
         Map<String, Double> bestResults = new HashMap<>();
         bestResults.put("X", globalBestX);
         bestResults.put("Y", globalBestY);
         bestResults.put("Adaptation", globalBestAdaptation);
         return bestResults;
+    }
+
+    public List<Integer> getIterations() {
+        return iterations;
+    }
+
+    public List<Double> getAvgPopulationValues() {
+        return avgPopulationValues;
+    }
+
+    public List<Double> getMinPopulationValues() {
+        return minPopulationValues;
     }
 }

@@ -15,7 +15,7 @@ public class Particle {
     private double bestY;
     private double bestXInSwarm;
     private double bestYInSwarm;
-    private double bestAdaptation;
+    private double bestAdaptation = Double.MAX_VALUE;
     private final double maxX;
     private final double maxY;
     private final double minX;
@@ -61,12 +61,12 @@ public class Particle {
         double inertionPartY = inertion * speedY;
         Random r = new Random();
         double cognitionAcceleration = cognition * r.nextDouble(1);
-        double cognitionPartX = cognitionAcceleration * Math.abs(bestX - x);
-        double cognitionPartY = cognitionAcceleration * Math.abs(bestY - y);
+        double cognitionPartX = cognitionAcceleration * (bestX - x);
+        double cognitionPartY = cognitionAcceleration * (bestY - y);
 
         double socialAcceleration = social * r.nextDouble(1);
-        double socialPartX = socialAcceleration * Math.abs(bestXInSwarm - x);
-        double socialPartY = socialAcceleration * Math.abs(bestYInSwarm - y);
+        double socialPartX = socialAcceleration * (bestXInSwarm - x);
+        double socialPartY = socialAcceleration * (bestYInSwarm - y);
 
         speedX = inertionPartX + cognitionPartX + socialPartX;
         speedY = inertionPartY + cognitionPartY + socialPartY;

@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MainFormController {
     public static final String MAIN_FORM_RESOURCE = "MainForm.fxml";
@@ -89,8 +90,11 @@ public class MainFormController {
                                 Integer.parseInt(numOfIterations.getText()), Double.parseDouble(feromonEvaporation.getText()),
                                 Double.parseDouble(feromonWeight.getText()), Double.parseDouble(heuristicWeight.getText()),
                                 Double.parseDouble(randomChance.getText()), Double.parseDouble(vehicleDemand.getText()));
-                        double shortestRoute = aa.start();
+                        Map<String, Double> results = aa.start();
+                        double shortestRoute = results.get("ShortestRoute");
+                        double numOfVehicles = results.get("NumOfVehicles");
                         consoleArea.appendText("Shortest route: " + shortestRoute + "\n");
+                        consoleArea.appendText("Num Of Vehicles: " + numOfVehicles + "\n");
 
                         try {
                             ChartUtilities.saveChartAsPNG(

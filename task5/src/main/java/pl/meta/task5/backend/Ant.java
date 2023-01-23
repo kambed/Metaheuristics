@@ -21,6 +21,7 @@ public class Ant {
     private double currentDemand;
     private double maxTime;
     private double currentTime;
+    private int numOfVehicles = 0;
 
     public Ant(Distances distances, Feromons feromons, double randomMoveChance, int placesToVisit,
                double heuristicWeight, double feromonWeight, double maxDemand) {
@@ -35,49 +36,59 @@ public class Ant {
         this.maxDemand = maxDemand;
         toVisit = IntStream.rangeClosed(1, numOfPlacesToVisit)
                 .boxed().collect(Collectors.toList());
+        this.maxTime = 230.0;
     }
 
     public void move() {
         //move random
-        if (currentPosition != 0 && currentDemand > maxDemand * 0.8) {
-            toVisit.add(0);
+        List<Integer> possibleToVisit = toVisit;//.stream().filter(i -> distances.getPlace(i).getDueTime() > currentTime).toList();
+        if (possibleToVisit.size() == 0) {
+            nextPossiblePosition = 0;
         } else {
-            toVisit.remove((Integer) 0);
-        }
-        if (Math.random() < randomMoveChance) {
-            Random random = new Random();
-            nextPossiblePosition = toVisit.get(random.nextInt(toVisit.size()));
-        } else {
-            Map<Integer, Double> chance = new HashMap<>();
-            double sumOfChances = 0;
-            for (int i = 0; i < numOfPlacesToVisit; i++) {
-                if (!visited.contains(i) && i != 0) {
-                    double chanceValue = Math.pow(feromons.getFeromon(currentPosition, i), feromonWeight) *
-                            Math.pow((1 / distances.getDistance(currentPosition, i)), heuristicWeight);
-                    sumOfChances += chanceValue;
-                    chance.put(i, chanceValue);
+            if (Math.random() < randomMoveChance) {
+                Random random = new Random();
+                nextPossiblePosition = possibleToVisit.get(random.nextInt(possibleToVisit.size()));
+            } else {
+                Map<Integer, Double> chance = new HashMap<>();
+                double sumOfChances = 0;
+                for (int i = 1; i < numOfPlacesToVisit + 1; i++) {
+                    if (possibleToVisit.contains(i)) {
+                        double chanceValue = Math.pow(feromons.getFeromon(currentPosition, i), feromonWeight) *
+                                Math.pow((1 / distances.getDistance(currentPosition, i)), heuristicWeight) *
+                                Math.pow((1 / (distances.getPlace(i).getDueTime() - currentTime)), 3);
+                        sumOfChances += chanceValue;
+                        chance.put(i, chanceValue);
+                    }
                 }
-            }
-            double rouletteIndex = Math.random() * sumOfChances;
-            int rouletteChosenIndex = 0;
-            for (Map.Entry<Integer, Double> entry : chance.entrySet()) {
-                rouletteIndex -= entry.getValue();
-                if (rouletteIndex < 0) {
-                    rouletteChosenIndex = entry.getKey();
-                    break;
+                double rouletteIndex = Math.random() * sumOfChances;
+                int rouletteChosenIndex = 0;
+                for (Map.Entry<Integer, Double> entry : chance.entrySet()) {
+                    rouletteIndex -= entry.getValue();
+                    if (rouletteIndex < 0) {
+                        rouletteChosenIndex = entry.getKey();
+                        break;
+                    }
                 }
+                nextPossiblePosition = rouletteChosenIndex;
             }
-            nextPossiblePosition = rouletteChosenIndex;
         }
         Place p = distances.getPlace(nextPossiblePosition);
-        if (currentDemand + p.getDemand() > maxDemand) {
+        if (currentDemand + p.getDemand() > maxDemand || nextPossiblePosition == 0) {
             currentDemand = 0;
             visited.add(0);
+            currentTime = 0;
+            numOfVehicles += 1;
         }
-        currentPosition = nextPossiblePosition;
-        visited.add(currentPosition);
-        toVisit.remove((Integer) currentPosition);
-        currentDemand += p.getDemand();
+        if (nextPossiblePosition != 0) {
+            currentPosition = nextPossiblePosition;
+            visited.add(currentPosition);
+            toVisit.remove((Integer) currentPosition);
+            currentDemand += p.getDemand();
+            if (p.getReadyTime() > currentTime) {
+                currentTime = p.getReadyTime();
+            }
+            currentTime += p.getServiceTime();
+        }
     }
 
     public void comeBackToBase() {
@@ -120,5 +131,9 @@ public class Ant {
 
     public List<Integer> getToVisit() {
         return toVisit;
+    }
+
+    public int getNumOfVehicles() {
+        return numOfVehicles;
     }
 }

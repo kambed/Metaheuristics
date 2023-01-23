@@ -3,7 +3,9 @@ package pl.meta.task5.backend;
 import pl.meta.task5.frontend.PathGenerator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AntAlgorithm {
     private Distances distances;
@@ -42,7 +44,7 @@ public class AntAlgorithm {
         }
     }
 
-    public double start() {
+    public Map<String, Double> start() {
         double shortestRoute = Double.MAX_VALUE;
         Ant bestAnt = null;
         for (int i = 0; i < numOfIterations; i++) {
@@ -89,7 +91,10 @@ public class AntAlgorithm {
             }
         }
         PathGenerator.generateRoad(x, y, labels);
-        return shortestRoute;
+        Map<String, Double> results = new HashMap<>();
+        results.put("ShortestRoute", shortestRoute);
+        results.put("NumOfVehicles", (double) bestAnt.getNumOfVehicles());
+        return results;
     }
 
     public List<Integer> getIterations() {

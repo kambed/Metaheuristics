@@ -36,15 +36,12 @@ public class Ant {
         this.maxDemand = maxDemand;
         toVisit = IntStream.rangeClosed(1, numOfPlacesToVisit)
                 .boxed().collect(Collectors.toList());
-        this.maxTime = 230.0;
     }
 
     public void move() {
         //move random
-        List<Integer> possibleToVisit = toVisit;//.stream().filter(i -> distances.getPlace(i).getDueTime() > currentTime).toList();
-        if (possibleToVisit.size() == 0) {
-            nextPossiblePosition = 0;
-        } else {
+        List<Integer> possibleToVisit = toVisit.stream().filter(i -> distances.getPlace(i).getDueTime() > currentTime).toList();
+        if (possibleToVisit.size() != 0) {
             if (Math.random() < randomMoveChance) {
                 Random random = new Random();
                 nextPossiblePosition = possibleToVisit.get(random.nextInt(possibleToVisit.size()));
@@ -54,8 +51,7 @@ public class Ant {
                 for (int i = 1; i < numOfPlacesToVisit + 1; i++) {
                     if (possibleToVisit.contains(i)) {
                         double chanceValue = Math.pow(feromons.getFeromon(currentPosition, i), feromonWeight) *
-                                Math.pow((1 / distances.getDistance(currentPosition, i)), heuristicWeight) *
-                                Math.pow((1 / (distances.getPlace(i).getDueTime() - currentTime)), 3);
+                                Math.pow((1 / distances.getDistance(currentPosition, i)), heuristicWeight);
                         sumOfChances += chanceValue;
                         chance.put(i, chanceValue);
                     }
@@ -71,24 +67,23 @@ public class Ant {
                 }
                 nextPossiblePosition = rouletteChosenIndex;
             }
+        } else {
+            nextPossiblePosition = 0;
         }
         Place p = distances.getPlace(nextPossiblePosition);
-        if (currentDemand + p.getDemand() > maxDemand || nextPossiblePosition == 0) {
+        if (currentDemand + p.getDemand() > maxDemand || possibleToVisit.size() == 0) {
             currentDemand = 0;
             visited.add(0);
             currentTime = 0;
-            numOfVehicles += 1;
         }
-        if (nextPossiblePosition != 0) {
-            currentPosition = nextPossiblePosition;
-            visited.add(currentPosition);
-            toVisit.remove((Integer) currentPosition);
-            currentDemand += p.getDemand();
-            if (p.getReadyTime() > currentTime) {
-                currentTime = p.getReadyTime();
-            }
-            currentTime += p.getServiceTime();
+        currentPosition = nextPossiblePosition;
+        visited.add(currentPosition);
+        toVisit.remove((Integer) currentPosition);
+        currentDemand += p.getDemand();
+        if (p.getReadyTime() > currentTime) {
+            currentTime = p.getReadyTime();
         }
+        currentTime += p.getServiceTime();
     }
 
     public void comeBackToBase() {

@@ -47,12 +47,13 @@ public class Ant {
                 Map<Integer, Double> chance = new HashMap<>();
                 double sumOfChances = 0;
                 for (int i = 1; i < numOfPlacesToVisit + 1; i++) {
-                    if (possibleToVisit.contains(i)) {
-                        double chanceValue = Math.pow(feromons.getFeromon(currentPosition, i), feromonWeight) *
-                                Math.pow((1 / distances.getDistance(currentPosition, i)), heuristicWeight);
-                        sumOfChances += chanceValue;
-                        chance.put(i, chanceValue);
+                    if (!possibleToVisit.contains(i)) {
+                        continue;
                     }
+                    double chanceValue = Math.pow(feromons.getFeromon(currentPosition, i), feromonWeight) *
+                            Math.pow((1 / distances.getDistance(currentPosition, i)), heuristicWeight);
+                    sumOfChances += chanceValue;
+                    chance.put(i, chanceValue);
                 }
                 double rouletteIndex = Math.random() * sumOfChances;
                 int rouletteChosenIndex = 0;
@@ -103,17 +104,18 @@ public class Ant {
     }
 
     public double calculateWholeRoute() {
-        if (route == -1) {
-            double route = 0;
-            int lastIndex = -1;
-            for (Integer id : visited) {
-                if (lastIndex != -1) {
-                    route += distances.getDistance(lastIndex, id);
-                }
-                lastIndex = id;
-            }
-            this.route = route;
+        if (route != -1) {
+            return route;
         }
+        double route = 0;
+        int lastIndex = -1;
+        for (Integer id : visited) {
+            if (lastIndex != -1) {
+                route += distances.getDistance(lastIndex, id);
+            }
+            lastIndex = id;
+        }
+        this.route = route;
         return route;
     }
 
@@ -139,10 +141,8 @@ public class Ant {
         copyRoute1.set(index1, copyRoute2.get(index2));
         copyRoute2.set(index2, placeIn1);
 
-        if (!checkIfTimeOk(copyRoute1) || !checkIfTimeOk(copyRoute2)) {
-            return false;
-        }
-        if (!checkIfDemandOk(copyRoute1) || !checkIfDemandOk(copyRoute2)) {
+        if (!checkIfTimeOk(copyRoute1) || !checkIfTimeOk(copyRoute2) ||
+                !checkIfDemandOk(copyRoute1) || !checkIfDemandOk(copyRoute2)) {
             return false;
         }
         return (calculateRoute(copyRoute1) + calculateRoute(copyRoute2)) < startDistance;

@@ -6,20 +6,18 @@ import java.util.stream.IntStream;
 
 public class Ant {
     private List<Integer> visited = new ArrayList<>();
-    private List<Integer> toVisit = new ArrayList<>();
+    private List<Integer> toVisit;
     private Distances distances;
     private Feromons feromons;
     private int nextPossiblePosition;
     private int currentPosition;
     private double randomMoveChance;
     private int numOfPlacesToVisit;
-    private int numOfPlacesVisited;
     private double heuristicWeight;
     private double feromonWeight;
     private double route = -1;
     private double maxDemand;
     private double currentDemand;
-    private double maxTime;
     private double currentTime;
     private int numOfVehicles = 0;
 
@@ -73,8 +71,8 @@ public class Ant {
         Place p = distances.getPlace(nextPossiblePosition);
         if (currentDemand + p.getDemand() > maxDemand || possibleToVisit.size() == 0) {
             currentDemand = 0;
-            visited.add(0);
             currentTime = 0;
+            nextPossiblePosition = 0;
         }
         currentPosition = nextPossiblePosition;
         visited.add(currentPosition);
@@ -84,6 +82,9 @@ public class Ant {
             currentTime = p.getReadyTime();
         }
         currentTime += p.getServiceTime();
+        if (currentPosition == 0) {
+            numOfVehicles++;
+        }
     }
 
     public void comeBackToBase() {
@@ -114,6 +115,88 @@ public class Ant {
             this.route = route;
         }
         return route;
+    }
+
+    public List<List<Integer>> getRoutes(List<Integer> route) {
+        List<List<Integer>> routes = new ArrayList<>();
+        int lastBase = 0;
+        for (int i = 1; i < route.size(); i++) {
+            if (route.get(i) == 0) {
+                routes.add(route.subList(lastBase, i));
+                lastBase = i;
+            }
+        }
+        return routes;
+    }
+
+    private boolean checkIfCouldBeSwapped(List<Integer> route1, List<Integer> route2, int index1, int index2) {
+        List<Integer> copyRoute1 = new ArrayList<>(route1);
+        List<Integer> copyRoute2 = new ArrayList<>(route2);
+        copyRoute1.add(0);
+        copyRoute2.add(0);
+        double startDistance = calculateRoute(copyRoute1) + calculateRoute(copyRoute2);
+        int placeIn1 = copyRoute1.get(index1);
+        copyRoute1.set(index1, copyRoute2.get(index2));
+        copyRoute2.set(index2, placeIn1);
+
+        if (!checkIfTimeOk(copyRoute1) || !checkIfTimeOk(copyRoute2)) {
+            return false;
+        }
+        if (!checkIfDemandOk(copyRoute1) || !checkIfDemandOk(copyRoute2)) {
+            return false;
+        }
+        return (calculateRoute(copyRoute1) + calculateRoute(copyRoute2)) < startDistance;
+    }
+
+    private boolean checkIfTimeOk(List<Integer> route) {
+        for (int i = 1; i < route.size(); i++) {
+            Place p1 = distances.getPlace(route.get(i - 1));
+            Place p2 = distances.getPlace(route.get(i));
+            if (p1.getDueTime() + p1.getDueTime() > p2.getReadyTime()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean checkIfDemandOk(List<Integer> route) {
+        int demandSum = 0;
+        for (Integer integer : route) {
+            demandSum += distances.getPlace(integer).getDemand();
+        }
+        return demandSum < maxDemand;
+    }
+
+    public double calculateRoute(List<Integer> route) {
+        double routeSum = 0;
+        for (int i = 1; i < route.size(); i++) {
+            routeSum += distances.getDistance(route.get(i - 1), route.get(i));
+        }
+        return routeSum;
+    }
+
+    public void tryEnhanceRouteWith2Opt() {
+        List<List<Integer>> routes = getRoutes(visited);
+        for (int i = 0; i < routes.size(); i++) {
+            for (int j = 0; j < routes.size(); j++) {
+                for (int k = 0; k < routes.get(i).size(); k++) {
+                    for (int l = 0; l < routes.get(j).size(); l++) {
+                        if (checkIfCouldBeSwapped(routes.get(i), routes.get(j), k, l)
+                                && routes.get(i).get(k) != 0 && routes.get(j).get(k) != 0) {
+                            int placeIn1 = routes.get(i).get(k);
+                            routes.get(i).set(k, routes.get(j).get(l));
+                            routes.get(j).set(l, placeIn1);
+                        }
+                    }
+                }
+            }
+        }
+        List<Integer> newVisited = new ArrayList<>();
+        for (List<Integer> route : routes) {
+            newVisited.addAll(route);
+        }
+        newVisited.add(0);
+        visited = newVisited;
     }
 
     public List<Integer> getVisited() {

@@ -175,7 +175,8 @@ public class Ant {
         return routeSum;
     }
 
-    public void tryEnhanceRouteWith2Opt() {
+    public boolean tryEnhanceRouteWith2Opt() {
+        boolean anythingChanged = false;
         List<List<Integer>> routes = getRoutes(visited);
         for (int i = 0; i < routes.size(); i++) {
             for (int j = 0; j < routes.size(); j++) {
@@ -186,6 +187,7 @@ public class Ant {
                             int placeIn1 = routes.get(i).get(k);
                             routes.get(i).set(k, routes.get(j).get(l));
                             routes.get(j).set(l, placeIn1);
+                            anythingChanged = true;
                         }
                     }
                 }
@@ -197,6 +199,7 @@ public class Ant {
         }
         newVisited.add(0);
         visited = newVisited;
+        return anythingChanged;
     }
 
     public List<Integer> getVisited() {

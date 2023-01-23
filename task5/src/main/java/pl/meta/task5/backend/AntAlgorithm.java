@@ -57,7 +57,10 @@ public class AntAlgorithm {
             }
             double avgRouteInThisIteration = 0;
             for (Ant a : ants) {
-                a.tryEnhanceRouteWith2Opt();
+                boolean isGettingBetter;
+                do {
+                    isGettingBetter = a.tryEnhanceRouteWith2Opt();
+                } while (isGettingBetter);
                 double route = a.calculateWholeRoute();
                 avgRouteInThisIteration += route;
                 if (route < shortestRoute) {
